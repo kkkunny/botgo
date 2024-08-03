@@ -10,11 +10,13 @@ import (
 	"time"
 
 	"github.com/go-resty/resty/v2" // resty 是一个优秀的 rest api 客户端，可以极大的减少开发基于 rest 标准接口求请求的封装工作量
+
 	"github.com/tencent-connect/botgo/errs"
 	"github.com/tencent-connect/botgo/log"
 	"github.com/tencent-connect/botgo/openapi"
 	"github.com/tencent-connect/botgo/token"
 	"github.com/tencent-connect/botgo/version"
+	"github.com/tencent-connect/botgo/websocket/client"
 )
 
 // MaxIdleConns 默认指定空闲连接池大小
@@ -107,7 +109,11 @@ func (o *openAPI) setupClient() {
 
 // request 每个请求，都需要创建一个 request
 func (o *openAPI) request(ctx context.Context) *resty.Request {
-	return o.restyClient.R().SetContext(ctx)
+	cli := o.restyClient
+	if client.DefaultProxyURL != "" {
+		cli = cli.SetProxy(client.DefaultProxyURL)
+	}
+	return cli.R().SetContext(ctx)
 }
 
 // respInfo 用于输出日志的时候格式化数据

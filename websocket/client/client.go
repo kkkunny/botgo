@@ -23,14 +23,20 @@ import (
 // DefaultQueueSize 监听队列的缓冲长度
 const DefaultQueueSize = 10000
 
-var DefaultProxy = http.ProxyFromEnvironment
+var DefaultProxyURL = ""
+var defaultProxy = func(req *http.Request) (*url.URL, error) {
+	if DefaultProxyURL == "" {
+		return http.ProxyFromEnvironment(req)
+	}
+	return url.Parse(DefaultProxyURL)
+}
 
 // Setup 依赖注册
 func Setup() {
 	websocket.Register(&Client{
 		dialer: &wss.Dialer{
 			Proxy: func(req *http.Request) (*url.URL, error) {
-				return DefaultProxy(req)
+				return defaultProxy(req)
 			},
 			HandshakeTimeout: 45 * time.Second,
 		},

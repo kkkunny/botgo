@@ -78,6 +78,8 @@ const (
 
 	userMessageURI  uri = "/v2/users/{user_id}/messages"
 	groupMessageURI uri = "/v2/groups/{group_id}/messages"
+	userFileURI     uri = "/v2/users/{user_id}/files"
+	groupFileURI    uri = "/v2/groups/{group_id}/files"
 )
 
 // getURL 获取接口地址，会处理沙箱环境判断

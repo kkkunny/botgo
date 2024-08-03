@@ -1,5 +1,6 @@
 package dto
 
+// C2CMessageType 人人、群聊消息类型
 type C2CMessageType uint8
 
 const (
@@ -15,7 +16,7 @@ const (
 	C2CMessageTypeMedia C2CMessageType = 7
 )
 
-// C2CMessageToCreate 创建人人、群消息的结构体定义
+// C2CMessageToCreate 创建人人、群聊消息的结构体定义
 type C2CMessageToCreate struct {
 	// 消息类型
 	MessageType C2CMessageType `json:"msg_type"`
@@ -27,10 +28,10 @@ type C2CMessageToCreate struct {
 	Keyboard *KeyboardMessage `json:"keyboard,omitempty"`
 	// Ark对象
 	Ark *ArkMessage `json:"ark,omitempty"`
-	// 富媒体单聊的file_info TODO: type??
-	Media *interface{} `json:"media,omitempty"`
+	// 富媒体单聊的file_info
+	Media string `json:"media,omitempty"`
 	// 【暂未支持】消息引用
-	MessageReference *interface{} `json:"message_reference,omitempty"`
+	MessageReference interface{} `json:"message_reference,omitempty"`
 	// 前置收到的事件 ID，用于发送被动消息，支持事件："INTERACTION_CREATE"、"C2C_MSG_RECEIVE"、"FRIEND_ADD"
 	EventID EventType `json:"event_id,omitempty"`
 	// 前置收到的用户发送过来的消息 ID，用于发送被动（回复）消息
@@ -136,10 +137,48 @@ type ArkParam struct {
 	Value string `json:"value"`
 }
 
-// C2CMessageToReply 人人、群消息回复结构体定义
+// C2CMessageToReply 人人、群聊消息回复结构体定义
 type C2CMessageToReply struct {
 	// 消息唯一ID
 	ID string `json:"id"`
 	// 发送时间
 	Timestamp Timestamp `json:"timestamp"`
+}
+
+// C2CFileType 人人、群聊富媒体类型
+type C2CFileType uint8
+
+const (
+	// C2CFileTypeImage 图片png/jpg
+	C2CFileTypeImage C2CFileType = iota + 1
+	// C2CFileTypeVideo 视频mp4
+	C2CFileTypeVideo
+	// C2CFileTypeAudio 语音silk
+	C2CFileTypeAudio
+	// C2CFileTypeFile 文件（暂不开放）
+	C2CFileTypeFile
+)
+
+// C2CFileToCreate 创建人人、群聊富媒体的结构体定义
+type C2CFileToCreate struct {
+	// 媒体类型
+	FileType C2CFileType `json:"file_type"`
+	// 需要发送媒体资源的url
+	URL string `json:"url"`
+	// 设置 true 会直接发送消息到目标端，且会占用主动消息频次
+	SrvSendMsg bool `json:"srv_send_msg"`
+	// 【暂未支持】
+	FileData interface{} `json:"file_data,omitempty"`
+}
+
+// C2CFileToReply 人人、群聊富媒体回复结构体定义
+type C2CFileToReply struct {
+	// 文件 ID
+	FileUUID string `json:"file_uuid"`
+	// 文件信息，用于发消息接口的 media 字段使用
+	FileInfo string `json:"file_info"`
+	// 有效期，表示剩余多少秒到期，到期后 file_info 失效，当等于 0 时，表示可长期使用
+	TTL int64 `json:"ttl"`
+	// 发送消息的唯一ID，当srv_send_msg设置为true时返回
+	ID string `json:"id,omitempty"`
 }

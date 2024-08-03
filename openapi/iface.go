@@ -257,4 +257,8 @@ type C2CMessageAPI interface {
 	PostC2CMessage(ctx context.Context, userID string, msg *dto.C2CMessageToCreate) (*dto.C2CMessageToReply, error)
 	// PostGroupMessage 发送群组消息
 	PostGroupMessage(ctx context.Context, groupID string, msg *dto.C2CMessageToCreate) (*dto.C2CMessageToReply, error)
+	// PostC2CFile 上传单聊富文本
+	PostC2CFile(ctx context.Context, userID string, msg *dto.C2CFileToCreate) (*dto.C2CFileToReply, error)
+	// PostC2CFile 上传群组富文本
+	PostGroupFile(ctx context.Context, groupID string, msg *dto.C2CFileToCreate) (*dto.C2CFileToReply, error)
 }

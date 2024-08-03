@@ -4,12 +4,15 @@ package client
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"net/url"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
 	wss "github.com/gorilla/websocket" // 是一个流行的 websocket 客户端，服务端实现
+
 	"github.com/tencent-connect/botgo/dto"
 	"github.com/tencent-connect/botgo/errs"
 	"github.com/tencent-connect/botgo/event"
@@ -20,14 +23,24 @@ import (
 // DefaultQueueSize 监听队列的缓冲长度
 const DefaultQueueSize = 10000
 
+var DefaultProxy = http.ProxyFromEnvironment
+
 // Setup 依赖注册
 func Setup() {
-	websocket.Register(&Client{})
+	websocket.Register(&Client{
+		dialer: &wss.Dialer{
+			Proxy: func(req *http.Request) (*url.URL, error) {
+				return DefaultProxy(req)
+			},
+			HandshakeTimeout: 45 * time.Second,
+		},
+	})
 }
 
 // New 新建一个连接对象
 func (c *Client) New(session dto.Session) websocket.WebSocket {
 	return &Client{
+		dialer:          c.dialer,
 		messageQueue:    make(messageChan, DefaultQueueSize),
 		session:         &session,
 		closeChan:       make(closeErrorChan, 10),
@@ -38,6 +51,7 @@ func (c *Client) New(session dto.Session) websocket.WebSocket {
 // Client websocket 连接客户端
 type Client struct {
 	version         int
+	dialer          *wss.Dialer
 	conn            *wss.Conn
 	messageQueue    messageChan
 	session         *dto.Session
@@ -56,7 +70,7 @@ func (c *Client) Connect() error {
 	}
 
 	var err error
-	c.conn, _, err = wss.DefaultDialer.Dial(c.session.URL, nil)
+	c.conn, _, err = c.dialer.Dial(c.session.URL, nil)
 	if err != nil {
 		log.Errorf("%s, connect err: %v", c.session, err)
 		return err

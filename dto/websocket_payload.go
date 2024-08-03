@@ -107,3 +107,65 @@ type WSForumAuditData ForumAuditResult
 
 // WSInteractionData 互动事件
 type WSInteractionData Interaction
+
+// WSC2CMessageData 单聊消息 payload
+type WSC2CMessageData struct {
+	// 消息ID
+	ID string `json:"id"`
+	// 发送者
+	Author struct {
+		// 用户 openid
+		UserOpenID string `json:"user_openid"`
+	} `json:"author"`
+	// 文本消息类型
+	Content string `json:"content"`
+	// 消息生产时间
+	Timestamp Timestamp `json:"timestamp"`
+	// 富媒体文件附件
+	Attachments []struct {
+		// 文件类型，"image/jpeg","image/png","image/gif"，"file"，"video/mp4"，"voice"
+		ContentType string `json:"content_type"`
+		// 文件名称
+		Filename string `json:"filename"`
+		// 图片高度
+		Height int64 `json:"height"`
+		// 图片宽度
+		Width int64 `json:"width"`
+		// 文件大小
+		Size int64 `json:"size"`
+		// 文件链接
+		URL string `json:"url"`
+	} `json:"attachments,omitempty"`
+}
+
+// WSGroupATMessageData 群聊 only at 机器人的消息 payload
+type WSGroupATMessageData struct {
+	// 平台方消息 ID，可以用于被动消息发送
+	ID string `json:"id"`
+	// 发送者
+	Author struct {
+		// 用户在本群的 member_openid
+		MemberOpenID string `json:"member_openid"`
+	} `json:"author"`
+	// 消息内容
+	Content string `json:"content"`
+	// 消息生产时间
+	Timestamp Timestamp `json:"timestamp"`
+	// 群聊的 openid
+	GroupOpenID string `json:"group_openid"`
+	// 富媒体文件附件
+	Attachments []struct {
+		// 文件类型，"image/jpeg","image/png","image/gif"，"file"，"video/mp4"，"voice"
+		ContentType string `json:"content_type"`
+		// 文件名称
+		Filename string `json:"filename"`
+		// 图片高度
+		Height int64 `json:"height"`
+		// 图片宽度
+		Width int64 `json:"width"`
+		// 文件大小
+		Size int64 `json:"size"`
+		// 文件链接
+		URL string `json:"url"`
+	} `json:"attachments,omitempty"`
+}

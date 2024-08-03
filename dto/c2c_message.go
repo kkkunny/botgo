@@ -32,9 +32,9 @@ type C2CMessageToCreate struct {
 	// 【暂未支持】消息引用
 	MessageReference *interface{} `json:"message_reference,omitempty"`
 	// 前置收到的事件 ID，用于发送被动消息，支持事件："INTERACTION_CREATE"、"C2C_MSG_RECEIVE"、"FRIEND_ADD"
-	EventID *EventType `json:"event_id,omitempty"`
+	EventID EventType `json:"event_id,omitempty"`
 	// 前置收到的用户发送过来的消息 ID，用于发送被动（回复）消息
-	MsgID *string `json:"msg_id,omitempty"`
+	MsgID string `json:"msg_id,omitempty"`
 	// 回复消息的序号，与 msg_id 联合使用，避免相同消息id回复重复发送，不填默认是1。相同的 msg_id + msg_seq 重复发送会失败。
 	MsgSeq *int64 `json:"msg_seq,omitempty"`
 }

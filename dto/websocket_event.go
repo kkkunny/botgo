@@ -39,7 +39,11 @@ const (
 	EventForumAuditResult      EventType = "FORUM_PUBLISH_AUDIT_RESULT"
 	EventInteractionCreate     EventType = "INTERACTION_CREATE"
 	EventC2CMessageCreate      EventType = "C2C_MESSAGE_CREATE"
+	EventC2CMsgReceive         EventType = "C2C_MSG_RECEIVE"
 	EventGroupAtMessageCreate  EventType = "GROUP_AT_MESSAGE_CREATE"
+	EventGroupMsgReceive       EventType = "GROUP_MSG_RECEIVE"
+	EventFriendAdd             EventType = "FRIEND_ADD"
+	EventGroupAddRobot         EventType = "GROUP_ADD_ROBOT"
 )
 
 // intentEventMap 不同 intent 对应的事件定义

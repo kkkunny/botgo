@@ -37,6 +37,7 @@ type OpenAPI interface {
 	WebhookAPI
 	InteractionAPI
 	MessageSettingAPI
+	C2CMessageAPI
 }
 
 // Base 基础能力接口
@@ -248,4 +249,12 @@ type WebhookAPI interface {
 // MessageSettingAPI 频道消息设置接口
 type MessageSettingAPI interface {
 	GetMessageSetting(ctx context.Context, guildID string) (*dto.MessageSetting, error)
+}
+
+// C2CMessageAPI 人人、人群聊天接口
+type C2CMessageAPI interface {
+	// PostC2CMessage 发送单聊消息
+	PostC2CMessage(ctx context.Context, userID string, msg *dto.C2CMessageToCreate) (*dto.C2CMessageToReply, error)
+	// PostGroupMessage 发送群组消息
+	PostGroupMessage(ctx context.Context, groupID string, msg *dto.C2CMessageToCreate) (*dto.C2CMessageToReply, error)
 }
